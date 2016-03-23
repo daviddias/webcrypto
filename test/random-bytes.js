@@ -1,4 +1,7 @@
-var test = require('tape')
+/* eslint-env mocha */
+'use strict'
+
+var expect = require('chai').expect
 var crypto = require('../src')
 
 var randomBytesFunctions = {
@@ -6,55 +9,56 @@ var randomBytesFunctions = {
   pseudoRandomBytes: crypto.pseudoRandomBytes
 }
 
-for (var randomBytesName in randomBytesFunctions) {
-  // Both randomBytes and pseudoRandomBytes should provide the same interface
-  var randomBytes = randomBytesFunctions[randomBytesName]
+describe('random bytes', function () {
+  Object.keys(randomBytesFunctions).forEach(function (randomBytesName) {
+    // Both randomBytes and pseudoRandomBytes should provide the same interface
+    var randomBytes = randomBytesFunctions[randomBytesName]
 
-  test('get error message', function (t) {
-    try {
-      var b = randomBytes(10)
-      t.ok(Buffer.isBuffer(b))
-      t.end()
-    } catch (err) {
-      t.ok(/not supported/.test(err.message), '"not supported"  is in error message')
-      t.end()
-    }
-  })
+    it('get error message', function () {
+      try {
+        var b = randomBytes(10)
+        expect(Buffer.isBuffer(b)).to.be.eql(true)
+      } catch (err) {
+        expect(
+          err.message
+        ).to.match(
+            /not supported/
+        )
+      }
+    })
 
-  test(randomBytesName, function (t) {
-    t.plan(5)
-    t.equal(randomBytes(10).length, 10)
-    t.ok(Buffer.isBuffer(randomBytes(10)))
-    randomBytes(10, function (ex, bytes) {
-      t.error(ex)
-      t.equal(bytes.length, 10)
-      t.ok(Buffer.isBuffer(bytes))
-      t.end()
+    it(randomBytesName, function () {
+      expect(randomBytes(10)).to.have.length(10)
+      expect(Buffer.isBuffer(randomBytes(10))).to.be.eql(true)
+
+      randomBytes(10, function (err, bytes) {
+        expect(err).to.not.exist
+        expect(bytes).to.have.length(10)
+        expect(Buffer.isBuffer(bytes)).to.be.eql(true)
+      })
+    })
+
+    it(randomBytesName + ' seem random', function () {
+      var L = 1000
+      var b = randomBytes(L)
+
+      var mean = [].reduce.call(b, function (a, b) { return a + b }, 0) / L
+
+      // test that the random numbers are plausably random.
+      // Math.random() will pass this, but this will catch
+      // terrible mistakes such as this blunder:
+      // https://github.com/dominictarr/crypto-browserify/commit/3267955e1df7edd1680e52aeede9a89506ed2464#commitcomment-7916835
+
+      // this doesn't check that the bytes are in a random *order*
+      // but it's better than nothing.
+
+      var expected = 256 / 2
+      var smean = Math.sqrt(mean)
+
+      // console.log doesn't work right on testling, *grumble grumble*
+      // console.log(JSON.stringify([expected - smean, mean, expected + smean]))
+      expect(mean < expected + smean).to.be.eql(true)
+      expect(mean > expected - smean).to.be.eql(true)
     })
   })
-
-  test(randomBytesName + ' seem random', function (t) {
-    var L = 1000
-    var b = randomBytes(L)
-
-    var mean = [].reduce.call(b, function (a, b) { return a + b }, 0) / L
-
-    // test that the random numbers are plausably random.
-    // Math.random() will pass this, but this will catch
-    // terrible mistakes such as this blunder:
-    // https://github.com/dominictarr/crypto-browserify/commit/3267955e1df7edd1680e52aeede9a89506ed2464#commitcomment-7916835
-
-    // this doesn't check that the bytes are in a random *order*
-    // but it's better than nothing.
-
-    var expected = 256 / 2
-    var smean = Math.sqrt(mean)
-
-    // console.log doesn't work right on testling, *grumble grumble*
-    console.log(JSON.stringify([expected - smean, mean, expected + smean]))
-    t.ok(mean < expected + smean)
-    t.ok(mean > expected - smean)
-
-    t.end()
-  })
-}
+})

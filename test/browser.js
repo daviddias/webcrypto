@@ -1,18 +1,24 @@
+'use strict'
 
 require('./create-hash')
 require('./create-hmac')
-if (!process.browser) {
-  require('./dh')
-}
+require('./dh')
 
 require('./pbkdf2')
+
+var secure = true
 try {
   require('randombytes')(8)
+} catch (e) {
+  secure = false
+  console.log('no secure rng available')
+}
+
+if (secure) {
   require('./ecdh')
   require('./public-encrypt')
   require('./random-bytes')
   require('./sign')
-} catch (e) {
-  console.log('no secure rng avaiable')
 }
+
 require('./aes')
