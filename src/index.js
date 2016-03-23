@@ -1,4 +1,6 @@
-var isNode = !global.window
+'use strict'
+
+const isNode = require('detect-node')
 
 if (isNode) {
   module.exports = require('crypto')
