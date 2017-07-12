@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "aegir": "^9.3.0",
-    "chai": "^3.5.0",
+    "chai": "^4.0.1",
     "hash-test-vectors": "^1.3.2",
     "pre-commit": "^1.1.2",
     "pseudorandombytes": "^2.0.0"
