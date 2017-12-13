@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var algorithms = ['sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'md5', 'rmd160']
 var encodings = ['hex', 'base64'] // FIXME: test binary
 var vectors = require('hash-test-vectors')
@@ -24,18 +28,18 @@ describe('createHash', function () {
         }
         var obj = vectors[i]
 
-        var input = new Buffer(obj.input, 'base64')
+        var input = Buffer.from(obj.input, 'base64')
         var node = obj[algorithm]
         var js = createHash(algorithm).update(input).digest('hex')
         expect(js).to.be.eql(node)
 
         encodings.forEach(function (encoding) {
-          var input = new Buffer(obj.input, 'base64').toString(encoding)
+          var input = Buffer.from(obj.input, 'base64').toString(encoding)
           var node = obj[algorithm]
           var js = createHash(algorithm).update(input, encoding).digest('hex')
           expect(js).to.be.eql(node)
         })
-        input = new Buffer(obj.input, 'base64')
+        input = Buffer.from(obj.input, 'base64')
         node = obj[algorithm]
         var hash = createHash(algorithm)
         hash.end(input)

@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var crypto = require('../src')
 
 describe('diffie-hellman', function () {
@@ -10,6 +14,7 @@ describe('diffie-hellman', function () {
       'modp1', 'modp2', 'modp5', 'modp14', 'modp15', 'modp16'
     ].forEach(function (mod) {
       it(mod, function () {
+        this.timeout(20 * 1000)
         var dh1 = crypto.getDiffieHellman(mod)
         var p1 = dh1.getPrime().toString('hex')
         dh1.generateKeys()
@@ -34,6 +39,7 @@ describe('diffie-hellman', function () {
       64, 65, 192
     ].forEach(function (len) {
       it(String(len), function () {
+        this.timeout(50 * 1000)
         var dh2 = crypto.createDiffieHellman(len)
         var prime2 = dh2.getPrime()
         var p2 = prime2.toString('hex')

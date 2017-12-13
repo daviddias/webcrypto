@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var nodeCrypto = require('../src')
 var ourCrypto = require('../src')
 
@@ -15,10 +19,10 @@ var ec = {
   public: '2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145495a656f7744796c6c73344b2f7766426a4f313862596f37674778386e5951520a696a6134652f71454d696b4f484a616937676565557265557235586b792f4178377332644774656773504e7350674765354d705176673d3d0a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a'
 }
 
-rsa.private = new Buffer(rsa.private, 'hex')
-rsa.public = new Buffer(rsa.public, 'hex')
-ec.private = new Buffer(ec.private, 'hex')
-ec.public = new Buffer(ec.public, 'hex')
+rsa.private = Buffer.from(rsa.private, 'hex')
+rsa.public = Buffer.from(rsa.public, 'hex')
+ec.private = Buffer.from(ec.private, 'hex')
+ec.public = Buffer.from(ec.public, 'hex')
 
 function testit (keys, message, scheme) {
   var pub = keys.public
@@ -54,5 +58,5 @@ function testit (keys, message, scheme) {
   })
 }
 
-testit(rsa, new Buffer('rsa with sha256'), 'RSA-SHA256')
-testit(ec, new Buffer('ec with sha1'), 'ecdsa-with-SHA1')
+testit(rsa, Buffer.from('rsa with sha256'), 'RSA-SHA256')
+testit(ec, Buffer.from('ec with sha1'), 'ecdsa-with-SHA1')
