@@ -39,6 +39,7 @@ describe('diffie-hellman', function () {
       64, 65, 192
     ].forEach(function (len) {
       it(String(len), function () {
+        this.timeout(50 * 1000)
         var dh2 = crypto.createDiffieHellman(len)
         var prime2 = dh2.getPrime()
         var p2 = prime2.toString('hex')
