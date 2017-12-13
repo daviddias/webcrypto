@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var randomBytes = require('pseudorandombytes')
 var crypto = require('../src')
 
@@ -33,7 +37,7 @@ function runIt (i) {
 runIt(1)
 describe('aes', function () {
   it('getCiphers', function () {
-    expect(crypto.getCiphers()).to.not.be.empty
+    expect(crypto.getCiphers()).to.not.be.empty()
   })
 
   it('through crypto browserify works', function () {
@@ -51,6 +55,6 @@ describe('aes', function () {
     ).to.be.eql(
       Buffer.concat(out).toString('hex')
     )
-    expect(crypto.getCiphers()).to.not.be.empty
+    expect(crypto.getCiphers()).to.not.be.empty()
   })
 })

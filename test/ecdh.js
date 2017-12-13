@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var _crypto = require('../src')
 
 var createECDH1 = _crypto.createECDH

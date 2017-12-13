@@ -1,7 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-var expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 var crypto = require('../src')
 
 var randomBytesFunctions = {
@@ -22,7 +26,7 @@ describe('random bytes', function () {
         expect(
           err.message
         ).to.match(
-            /not supported/
+          /not supported/
         )
       }
     })
@@ -32,7 +36,7 @@ describe('random bytes', function () {
       expect(Buffer.isBuffer(randomBytes(10))).to.be.eql(true)
 
       randomBytes(10, function (err, bytes) {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         expect(bytes).to.have.length(10)
         expect(Buffer.isBuffer(bytes)).to.be.eql(true)
       })
