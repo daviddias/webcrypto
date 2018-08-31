@@ -35,7 +35,7 @@
   "homepage": "https://github.com/diasdavid/webcrypto#readme",
   "dependencies": {
     "crypto-browserify": "^3.10.0",
-    "detect-node": "^2.0.3"
+    "detect-node": "2.0.3"
   },
   "devDependencies": {
     "aegir": "^12.2.0",
